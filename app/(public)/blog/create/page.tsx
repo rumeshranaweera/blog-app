@@ -16,6 +16,14 @@ import { Button } from "@/components/ui/button";
 import { createBlogPost } from "@/actions/blog";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
+import { getTags } from "@/actions/tag";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const slugify = (text: string) =>
   text
@@ -33,6 +41,17 @@ export default function Page() {
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [tag, setTag] = useState("");
+  const [tags, setTags] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const tags = await getTags();
+      setTags(tags);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     setSlug(slugify(name));
@@ -61,6 +80,7 @@ export default function Page() {
                     content,
                     imageUrl,
                     authorId: session?.user?.id,
+                    tags: [tag],
                   });
                   router.replace(`/blog/${res.slug}`);
                   console.log("Blog post created:", res);
@@ -89,6 +109,22 @@ export default function Page() {
                     onChange={(e) => setSlug(e.target.value)}
                     placeholder="slug"
                   />
+                </div>
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="tag">Tag</Label>
+
+                  <Select value={tag} onValueChange={(value) => setTag(value)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {tags.map((tag) => (
+                        <SelectItem key={tag.id} value={tag.name}>
+                          {tag.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="slug">Banner Image</Label>

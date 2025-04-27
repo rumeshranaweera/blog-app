@@ -1,4 +1,4 @@
-import { getBlogPostBySlug } from "@/actions/blog";
+import { deleteBlogPost, getBlogPostBySlug } from "@/actions/blog";
 import { getCurrentUser } from "@/actions/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -38,7 +38,7 @@ export default async function Page({
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <Avatar>
                 <AvatarImage
-                  src={post!.author?.imageUrl ?? ""}
+                  src={post!.author.imageUrl}
                   alt={post!.author?.name ?? "Author"}
                 />
                 <AvatarFallback>
@@ -51,9 +51,16 @@ export default async function Page({
               <span>{post?.author?.name ?? "Unknown Author"}</span>
               <span>•</span>
               <span>{new Date(post!.createdAt).toLocaleDateString()}</span>
+              <span>•</span>
+              <span>{post?.tags.map((tag) => `#${tag.name}`).join(", ")}</span>
             </div>
             {hasAccessToChangeData && (
-              <div>
+              <form
+                action={async () => {
+                  "use server";
+                  await deleteBlogPost(post!.id);
+                }}
+              >
                 <Button
                   variant={"ghost"}
                   size="icon"
@@ -61,7 +68,7 @@ export default async function Page({
                 >
                   <Trash />
                 </Button>
-              </div>
+              </form>
             )}
           </div>
         </CardHeader>

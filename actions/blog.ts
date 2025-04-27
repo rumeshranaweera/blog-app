@@ -4,8 +4,22 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export const getBlogPosts = async (page: number, limit: number = 10) => {
+export const getBlogPosts = async (
+  page: number,
+  limit: number = 10,
+  tag: string
+) => {
   const posts = await prisma.post.findMany({
+    where: {
+      tags: {
+        ...(tag !== "ALL" && {
+          // Only apply tag filter if not "ALL"
+          some: {
+            name: tag,
+          },
+        }),
+      },
+    },
     skip: (page - 1) * limit,
     take: limit || 10,
     select: {
@@ -60,6 +74,12 @@ export const getBlogPostBySlug = async (slug: string) => {
           },
         },
       },
+      tags: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
   return post;
@@ -71,6 +91,7 @@ export const createBlogPost = async (data: {
   slug: string;
   imageUrl: string;
   authorId: string;
+  tags?: string[];
 }) => {
   const post = await prisma.post.create({
     data: {
@@ -79,6 +100,12 @@ export const createBlogPost = async (data: {
       slug: data.slug,
       authorId: data.authorId,
       imageUrl: data.imageUrl,
+      tags: {
+        connectOrCreate: data.tags?.map((tag) => ({
+          where: { name: tag },
+          create: { name: tag },
+        })),
+      },
     },
   });
   revalidatePath("/");
@@ -193,6 +220,14 @@ export const getSavedBlogs = async (userId: string) => {
           imageUrl: true,
           createdAt: true,
           updatedAt: true,
+          authorId: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
         },
       },
     },
