@@ -40,7 +40,7 @@ export default function Page() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState<string>("");
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<any[]>([]);
 
@@ -153,8 +153,21 @@ export default function Page() {
                         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
                       }
                       onSuccess={(result) => {
-                        console.log("result", result);
-                        setImageUrl(result?.info?.secure_url);
+                        const info = result?.info;
+                        if (
+                          typeof info === "object" &&
+                          info !== null &&
+                          "secure_url" in info
+                        ) {
+                          setImageUrl(
+                            (info as { secure_url: string }).secure_url
+                          );
+                        } else {
+                          console.warn(
+                            "Cloudinary upload did not return expected info object:",
+                            info
+                          );
+                        }
                       }}
                       options={
                         {
