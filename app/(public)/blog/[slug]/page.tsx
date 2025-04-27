@@ -37,10 +37,7 @@ export default async function Page({
           <div className="flex justify-between">
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <Avatar>
-                <AvatarImage
-                  src={post!.author.imageUrl}
-                  alt={post!.author?.name ?? "Author"}
-                />
+                <AvatarImage alt={post!.author?.name ?? "Author"} />
                 <AvatarFallback>
                   {post!.author?.name
                     ?.split(" ")
