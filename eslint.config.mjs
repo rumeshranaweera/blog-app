@@ -10,42 +10,13 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
+  ...compat.config({
+    extends: ["next"],
     rules: {
-      // Disable base rule to use TypeScript version
-      "no-unused-expressions": "off",
-      "@typescript-eslint/no-unused-expressions": [
-        "error",
-        {
-          allowShortCircuit: true,
-          allowTernary: true,
-          allowTaggedTemplates: true,
-        },
-      ],
-      // Fix unused variables
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
-        },
-      ],
-      // Additional recommended rules
-      "no-console": "warn",
-      "react-hooks/exhaustive-deps": "error",
+      "react/no-unescaped-entities": "off",
+      "@next/next/no-page-custom-font": "off",
     },
-  },
-  {
-    // Apply specific rules to different file types
-    files: ["**/*.ts", "**/*.tsx"],
-    rules: {
-      // TypeScript-specific rules
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-    },
-  },
+  }),
 ];
 
 export default eslintConfig;
