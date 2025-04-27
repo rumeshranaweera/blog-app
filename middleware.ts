@@ -1,12 +1,12 @@
 import { auth } from "@/auth";
 
 export default auth((req) => {
-  // Only protect /admin routes
+  // console.log("req", req.auth);
   if (req.nextUrl.pathname.startsWith("/admin")) {
-    //   if (req.auth?.user?.role !== "ADMIN") {
-    // const newUrl = new URL("/api/auth/signin", req.nextUrl.origin);
-    // return Response.redirect(newUrl);
-    //   }
+    if (req.auth?.user?.role !== "ADMIN") {
+      const newUrl = new URL("/api/auth/signin", req.nextUrl.origin);
+      return Response.redirect(newUrl);
+    }
   }
 
   //if user already authenticated and trying to access sign in page

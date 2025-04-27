@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
   providers: [
     Google({
       profile(profile) {
@@ -33,8 +34,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    session({ session, user }) {
-      session.user.role = user.role;
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role; // Add custom fields here
+        token.id = user.id; // Add user ID to the token
+        // add other fields as needed
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.role = token.role; // Copy from token to session
+        session.user.id = token.id;
+        // add other fields as needed
+      }
       return session;
     },
   },

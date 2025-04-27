@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Heart, ThumbsUp } from "lucide-react";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function LikeSaveSection({
   postId,
@@ -23,7 +24,8 @@ export async function LikeSaveSection({
   const user = await getCurrentUser();
 
   const likes = await getBlogPostLikes(postId);
-  const userSaveBlogPost = await getSavedBlogs(user.id);
+
+  const userSaveBlogPost = user ? await getSavedBlogs(user?.id) : [];
 
   const hasUserLiked = likes.find((like) => like.userId === user?.id);
   console.log("Likes data:", likes);
@@ -35,11 +37,14 @@ export async function LikeSaveSection({
       <form
         action={async () => {
           "use server";
+          if (!user) {
+            redirect("/api/auth/signin");
+          }
           if (hasUserLiked) {
             await unlikeBlogPost(hasUserLiked.id);
             revalidatePath(`/blog/${slug}`);
           }
-          await CreateLikeBlogPost(postId, user.id, slug);
+          await CreateLikeBlogPost(postId, user?.id, slug);
         }}
       >
         <Button
@@ -55,7 +60,10 @@ export async function LikeSaveSection({
       <form
         action={async () => {
           "use server";
-          await saveBlogPost(postId, user.id);
+          if (!user) {
+            redirect("/api/auth/signin");
+          }
+          await saveBlogPost(postId, user?.id);
           revalidatePath(`/blog/${slug}`);
         }}
       >
