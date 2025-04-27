@@ -1,6 +1,6 @@
 "use client";
 
-import { getCurrentUser, getUsers, updateUserRole } from "@/actions/user";
+import { getUsers, updateUserRole } from "@/actions/user";
 import { useEffect, useState } from "react";
 import {
   Select,
@@ -12,7 +12,17 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<
+    {
+      name: string | null;
+      id: string;
+      email: string | null;
+      emailVerified: Date | null;
+      image: string | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  >([]);
   const [roles, setRoles] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
