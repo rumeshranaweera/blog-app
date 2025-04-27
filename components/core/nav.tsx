@@ -76,7 +76,7 @@ export default async function Nav() {
             <div className="flex">
               <Link
                 className={buttonVariants({ size: "sm" })}
-                href="api/auth/signin"
+                href="/api/auth/signin"
               >
                 Sign Up
               </Link>

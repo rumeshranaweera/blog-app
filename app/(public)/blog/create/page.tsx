@@ -14,11 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { createBlogPost } from "@/actions/blog";
-import {
-  CldImage,
-  CldUploadWidget,
-  CloudinaryUploadWidgetInfo,
-} from "next-cloudinary";
+import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 
 const slugify = (text: string) =>
@@ -43,7 +39,7 @@ export default function Page() {
   }, [name]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-rose-200">
+    <div className="flex flex-col items-center justify-center p-4">
       <article className="mx-auto max-w-3xl">
         <Card>
           <CardHeader>
@@ -124,9 +120,11 @@ export default function Page() {
                         console.log("result", result);
                         setImageUrl(result?.info?.secure_url);
                       }}
-                      options={{
-                        singleUploadAutoClose: true,
-                      }}
+                      options={
+                        {
+                          // singleUploadAutoClose: true,
+                        }
+                      }
                     >
                       {({ open }) => {
                         function handleOnClick() {
