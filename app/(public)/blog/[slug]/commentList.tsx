@@ -13,7 +13,7 @@ export default async function CommentList({
 }) {
   const user = await getCurrentUser();
 
-  const isAdmin = user.role === "ADMIN";
+  const isAdmin = user?.role === "ADMIN";
 
   if (!comments || comments.length === 0) {
     return <p className="text-sm text-gray-400">No comments yet</p>;
@@ -30,7 +30,7 @@ export default async function CommentList({
             <h3 className="text-sm text-gray-400">{comment.user.name}</h3>
             <p>{comment.content}</p>
           </div>
-          {isAdmin || comment.user.id === user.id ? (
+          {isAdmin || comment.user?.id === user?.id ? (
             <form
               action={async () => {
                 "use server";

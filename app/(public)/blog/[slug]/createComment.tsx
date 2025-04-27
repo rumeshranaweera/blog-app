@@ -1,5 +1,6 @@
 import { getBlogPostBySlug } from "@/actions/blog";
 import { createComment } from "@/actions/comments";
+import { sendEmail } from "@/actions/email";
 import { getCurrentUser } from "@/actions/user";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +12,8 @@ export default async function CreateCommentComponent({
   const post = await getBlogPostBySlug(slug);
 
   const user = await getCurrentUser();
+  // console.log("user", user);
+  // console.log("posts", post);
   return (
     <div className="my-2">
       <h2 className="text-xl font-bold mt-8">Your Comment</h2>
@@ -18,12 +21,17 @@ export default async function CreateCommentComponent({
         className="mt-4"
         action={async (e) => {
           "use server";
+          await sendEmail(
+            post!.author!.email,
+            "New Comment - Blog App",
+            `${user.name} commented your blog post`
+          );
           const content = e.get("comment")?.toString();
           if (!user || !user.id || !content) {
-            alert("You must be logged in to comment");
+            console.log(user, content);
             return;
           }
-          await createComment({
+          const commentRes = await createComment({
             content,
             postId: post!.id,
             userId: user?.id,
