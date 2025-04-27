@@ -10,30 +10,21 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { signOut } from "@/auth";
-import { LayoutDashboard, LogOut, Rss } from "lucide-react";
+import { Heart, LayoutDashboard, LogOut, Rss } from "lucide-react";
 import { buttonVariants } from "../ui/button";
+import { ModeToggle } from "./modeToggle";
 
 export default async function Nav() {
   const user = await getCurrentUser();
   console.log("user", user);
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
-      <div className="text-lg font-bold">My App</div>
+      <Link href="/" className="text-lg font-bold">
+        My App
+      </Link>
       <ul className="flex space-x-4">
         <li>
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-        </li>
-        <li>
-          <Link href="/about" className="hover:underline">
-            About
-          </Link>
-        </li>
-        <li>
-          <Link href="/contact" className="hover:underline">
-            Contact
-          </Link>
+          <ModeToggle />
         </li>
         <li>
           {user ? (
@@ -47,12 +38,16 @@ export default async function Nav() {
               <DropdownMenuContent className="w-56" align="end">
                 <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {user?.role === "READER" && (
+                {user?.role === "ADMIN" && (
                   <DropdownMenuItem>
                     <LayoutDashboard />
                     <Link href="/admin">Admin</Link>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem>
+                  <Heart />
+                  <Link href="/blog/saved">Saved Blogs</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Rss />
                   <Link href="/blog/create">Create Blog</Link>
