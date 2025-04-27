@@ -22,7 +22,7 @@ export default async function CreateCommentComponent({
         action={async (e) => {
           "use server";
           await sendEmail(
-            post!.author!.email,
+            post!.author!.email || process.env.EMAIL!,
             "New Comment - Blog App",
             `${user.name} commented your blog post`
           );
