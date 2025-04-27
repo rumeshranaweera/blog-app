@@ -7,7 +7,7 @@ const {
   Public,
   getRuntime,
   skip,
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  // @typescript-eslint/no-require-imports
 } = require("./runtime/index-browser.js");
 
 const Prisma = {};
