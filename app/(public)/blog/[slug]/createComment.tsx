@@ -21,12 +21,12 @@ export default async function CreateCommentComponent({
         className="mt-4"
         action={async (e) => {
           "use server";
+          const content = e.get("comment")?.toString();
           await sendEmail(
             post!.author!.email || process.env.EMAIL!,
             "New Comment - Blog App",
-            `${user.name} commented your blog post`
+            `${user.name} commented ''${content}'' on your blog post ${post!.title}.`
           );
-          const content = e.get("comment")?.toString();
           if (!user || !user.id || !content) {
             console.log(user, content);
             return;

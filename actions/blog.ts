@@ -12,12 +12,13 @@ export const getBlogPosts = async (
   const posts = await prisma.post.findMany({
     where: {
       tags: {
-        ...(tag !== "ALL" && {
-          // Only apply tag filter if not "ALL"
-          some: {
-            name: tag,
-          },
-        }),
+        ...(tag &&
+          tag !== "ALL" && {
+            // Only apply tag filter if not "ALL"
+            some: {
+              name: tag,
+            },
+          }),
       },
     },
     skip: (page - 1) * limit,

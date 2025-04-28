@@ -22,22 +22,19 @@ function Filters({ tags }: { tags: { id: string; name: string }[] }) {
     }
     replace(`${pathname}?${params.toString()}`);
   }
+
   return (
-    <Select
-      onValueChange={(value) => handleSearch(value)}
-      defaultValue={searchParams.get("query") || ""}
+    <select
+      className="w-full p-4 mt-2"
+      defaultValue="ALL"
+      onChange={(e) => handleSearch(e.target.value)}
     >
-      <SelectTrigger className="w-full">
-        <SelectValue placeholder="Tag" />
-      </SelectTrigger>
-      <SelectContent>
-        {[{ name: "ALL", id: "All" }, ...tags].map((tag) => (
-          <SelectItem key={tag.id} value={tag.name}>
-            {tag.name}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+      {[{ name: "ALL", id: "All" }, ...tags].map((tag) => (
+        <option key={tag.id} value={tag.name} className="text-black">
+          {tag.name}
+        </option>
+      ))}
+    </select>
   );
 }
 

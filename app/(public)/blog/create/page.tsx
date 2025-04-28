@@ -113,18 +113,24 @@ export default function Page() {
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="tag">Tag</Label>
 
-                  <Select value={tag} onValueChange={(value) => setTag(value)}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tags.map((tag) => (
-                        <SelectItem key={tag.id} value={tag.name}>
-                          {tag.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    className="w-full text-white p-2"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select role
+                    </option>
+                    {tags.map((tag) => (
+                      <option
+                        key={tag.id}
+                        value={tag.name}
+                        className="text-black"
+                      >
+                        {tag.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="flex flex-col space-y-1.5">
                   <Label htmlFor="slug">Banner Image</Label>
